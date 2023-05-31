@@ -8,6 +8,6 @@ class TestingController extends Controller
 {
     public function testApiConnection() 
     {
-        return "Connection successful!";
+        return response()->json(['message' => "Connection successful!"]);
     }
 }
