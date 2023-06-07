@@ -26,6 +26,7 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10
 Route::post('/create_admin', [AuthController::class, 'createAdmin']);
 //Util Routes
 Route::post('/inital_account_picture', [AccountController::class, "initialAccountPicture"]);
+Route::get('/get_profile_pic/{id}', [AccountController::class, "getProfilePic"]);
 //Temp Routes
 Route::post('/add_replica', [ReplicaController::class, "addReplica"]);
 Route::post('/get_replicas', [ReplicaController::class, "getReplicas"]);
@@ -36,6 +37,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/upload_picture', [AccountController::class, "uploadAccountPicture"]);
     Route::put('/update_name', [AccountController::class, "updateProfileName"]);
-    Route::get('/get_profile_pic/{id}', [AccountController::class, "getProfilePic"]);
     Route::post('/upload_picture', [AccountController::class, 'uploadProfilePic']);
 });

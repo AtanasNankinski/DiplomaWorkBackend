@@ -125,7 +125,7 @@ class ReplicaController extends Controller
             ], 422);
         }
 
-        $replica = Replica::where('user_id', $req->user_id)->where('replica_name', $req->replica_name)->delete();
+        Replica::where('user_id', $req->user_id)->where('replica_name', $req->replica_name)->delete();
 
         return response()->json([
             'message' => "Replica deleted successfully.",
