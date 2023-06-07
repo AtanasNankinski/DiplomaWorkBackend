@@ -29,6 +29,7 @@ Route::post('/inital_account_picture', [AccountController::class, "initialAccoun
 //Temp Routes
 Route::post('/add_replica', [ReplicaController::class, "addReplica"]);
 Route::post('/get_replicas', [ReplicaController::class, "getReplicas"]);
+Route::post('/edit_replica', [ReplicaController::class, "editReplica"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

@@ -67,11 +67,47 @@ class ReplicaController extends Controller
         {
             return response()->json([
                 'message'=>"There are no replicas for that user."
-            ], 401);
+            ], 404);
         }
 
         return response()->json([
             'replicas' => $replicas
+        ], 200);
+    }
+
+    public function editReplica(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'replica_name' => 'required|string',
+            'replica_type' => 'required|string',
+            'replica_power' => 'required|numeric',
+            'user_id' => 'required|int',
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'message' => 'Validator fails.'
+            ], 422);
+        }
+
+        $replica = Replica::where('user_id', $req->user_id)->where('replica_name', $req->replica_name)->first();
+
+        if(!$replica)
+        {
+            return response()->json([
+                'message'=>"There are no replicas for that user."
+            ], 404);
+        }
+
+        $replica->replica_type = $req->replica_type;
+        $replica->replica_power = $req->replica_power;
+        $replica->save();
+
+        return response()->json([
+            'replica_name' => $replica->replica_name,
+            'replica_type' => $replica->replica_type,
+            'replica_power' => $replica->replica_power
         ], 200);
     }
 }
