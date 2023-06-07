@@ -110,4 +110,25 @@ class ReplicaController extends Controller
             'replica_power' => $replica->replica_power
         ], 200);
     }
+
+    public function deleteReplica(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'replica_name' => 'required|string',
+            'user_id' => 'required|int',
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'message' => 'Validator fails.'
+            ], 422);
+        }
+
+        $replica = Replica::where('user_id', $req->user_id)->where('replica_name', $req->replica_name)->delete();
+
+        return response()->json([
+            'message' => "Replica deleted successfully.",
+        ], 200);
+    }
 }
