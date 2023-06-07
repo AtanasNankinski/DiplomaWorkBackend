@@ -47,4 +47,31 @@ class ReplicaController extends Controller
             'replica_power' => $replica->replica_power
         ]);
     }
+
+    public function getReplicas(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'user_id' => 'required|int',
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'message' => 'Validator fails.'
+            ], 422);
+        }
+
+        $replicas = Replica::where('user_id', $req->user_id)->get();
+
+        if(!$replicas)
+        {
+            return response()->json([
+                'message'=>"There are no replicas for that user."
+            ], 401);
+        }
+
+        return response()->json([
+            'replicas' => $replicas
+        ], 200);
+    }
 }
