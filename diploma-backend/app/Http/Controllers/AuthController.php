@@ -77,7 +77,7 @@ class AuthController extends Controller
             ], 201);
         }
 
-        return response(['error' => 'Invalid login credentials'], 401);
+        return response(['error' => 'Invalid login credentials'], 422);
     }
 
     public function logout(Request $request)
