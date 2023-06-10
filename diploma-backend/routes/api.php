@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TestingController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ReplicaController;
+use App\Http\Controllers\GamesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +29,7 @@ Route::post('/create_admin', [AuthController::class, 'createAdmin']);
 Route::post('/inital_account_picture', [AccountController::class, "initialAccountPicture"]);
 Route::get('/get_profile_pic/{id}', [AccountController::class, "getProfilePic"]);
 //Temp Routes
-
+Route::post('/create_game', [GamesController::class, "addGame"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
