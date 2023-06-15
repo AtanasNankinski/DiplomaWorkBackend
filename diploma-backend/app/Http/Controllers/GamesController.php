@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use DateTime;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Game;
 
 class GamesController extends Controller
@@ -16,14 +16,21 @@ class GamesController extends Controller
             'game_title' => 'required|string',
             'game_description' => 'required|string',
             'game_date' => 'required|string',
+            'user_id' => 'required|int',
         ]);
-
-        //return response()->json(['title' => $req->game_title, 'desc' => $req->game_description, 'date' => $req->game_date]);
 
         if($validator->fails())
         {
             return response()->json([
                 'message' => 'Validator fails.'
+            ], 422);
+        }
+
+        $user = User::where('id', $req->user_id)->first();
+        if(!$user || $user->user_type != 1)
+        {
+            return response()->json([
+                'message' => 'No such user or the current user doesn\'t have the required access rights.'
             ], 422);
         }
 
@@ -37,6 +44,5 @@ class GamesController extends Controller
         $game->save();
 
         return response()->json(['game' => $game], 201);
-
     }
 }
