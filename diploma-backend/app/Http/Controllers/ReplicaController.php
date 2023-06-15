@@ -63,7 +63,7 @@ class ReplicaController extends Controller
 
         $replicas = Replica::where('user_id', $req->user_id)->get();
 
-        if(!$replicas)
+        if(sizeof($replicas) == 0)
         {
             return response()->json([
                 'message'=>"There are no replicas for that user."

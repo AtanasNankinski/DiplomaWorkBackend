@@ -49,7 +49,7 @@ class AccountController extends Controller
         {
             return response()->json([
                 'message'=>"There is no account avatar with that id."
-            ], 401);
+            ], 422);
         }
 
         $url = $picture->url;
