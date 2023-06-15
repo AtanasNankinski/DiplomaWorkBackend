@@ -45,4 +45,35 @@ class GamesController extends Controller
 
         return response()->json(['game' => $game], 201);
     }
+
+    public function getGames()
+    {
+        $games = Game::all();
+
+        return response()->json([
+            "games" => $games,
+        ], 200);
+    }
+
+    public function getValidGames()
+    {
+        $currentDate = Carbon::today()->format('Y-m-d');
+
+        $games = Game::whereDate('game_date', '>', $currentDate)->get();
+
+        return response()->json([
+            "games" => $games,
+        ], 200);
+    }
+
+    public function getPastGames()
+    {
+        $currentDate = Carbon::today()->format('Y-m-d');
+
+        $games = Game::whereDate('game_date', '<', $currentDate)->get();
+
+        return response()->json([
+            "games" => $games,
+        ], 200);
+    }
 }
