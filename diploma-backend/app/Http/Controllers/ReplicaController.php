@@ -42,6 +42,7 @@ class ReplicaController extends Controller
         $replica->save();
 
         return response()->json([
+            'id' => $replica->id,
             'replica_name' => $replica->replica_name,
             'replica_type' => $replica->replica_type,
             'replica_power' => $replica->replica_power

@@ -32,6 +32,7 @@ Route::get('/get_profile_pic/{id}', [AccountController::class, "getProfilePic"])
 Route::get('/get_games', [GamesController::class, "getGames"]);
 Route::get('/get_valid_games', [GamesController::class, "getValidGames"]);
 Route::get('/get_past_games', [GamesController::class, "getPastGames"]);
+Route::post('/create_player', [GamesController::class, "createPlayer"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

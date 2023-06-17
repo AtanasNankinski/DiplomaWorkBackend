@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Game;
+use App\Models\player;
 
 class GamesController extends Controller
 {
@@ -61,8 +62,20 @@ class GamesController extends Controller
 
         $games = Game::whereDate('game_date', '>', $currentDate)->get();
 
+        $validGames = [];
+
+        foreach ($games as $game) {
+            $playerCount = Player::where('game', $game->id)->count();
+            $validGames[] = [
+                'game_title' => $game->game_title,
+                'game_description' => $game->game_description,
+                'game_date' => $game->date,
+                'participnts' => $playerCount,
+            ];
+        }
+
         return response()->json([
-            "games" => $games,
+            "games" => $validGames,
         ], 200);
     }
 
@@ -72,8 +85,68 @@ class GamesController extends Controller
 
         $games = Game::whereDate('game_date', '<', $currentDate)->get();
 
+        $pastGames = [];
+
+        foreach ($games as $game) {
+            $playerCount = Player::where('game', $game->id)->count();
+            $pastGames[] = [
+                'game_title' => $game->game_title,
+                'game_description' => $game->game_description,
+                'game_date' => $game->date,
+                'participnts' => $playerCount,
+            ];
+        }
+
         return response()->json([
-            "games" => $games,
+            "games" => $pastGames,
         ], 200);
+    }
+
+    public function createPlayer(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'user_id' => 'required|int',
+            'replica_id' => 'required|int',
+            'game_id' => 'required|int',
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'message' => 'Validator fails.'
+            ], 422);
+        }
+
+        $player = Player::create([
+            'user' => $req->user_id,
+            'replica' => $req->replica_id,
+            'game' => $req->game_id,
+            'team' => 1,
+        ]);
+        $player->save();
+
+        return response()->json([
+            'player' => $player
+        ], 201);
+    }
+
+    public function getPlayers(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'game_id' => 'required|int',
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'message' => 'Validator fails.'
+            ], 422);
+        }
+
+        $players = Player::where('game', $req->game_id)->all();
+
+        return response()->json([
+            'players' => $players,
+        ]);
     }
 }
