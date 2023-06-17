@@ -50,9 +50,21 @@ class GamesController extends Controller
     public function getGames()
     {
         $games = Game::all();
+        $finalGames = [];
+
+        foreach ($games as $game) {
+            $playerCount = Player::where('game', $game->id)->count();
+            $finalGames[] = [
+                'id' => $game->id,
+                'game_title' => $game->game_title,
+                'game_description' => $game->game_description,
+                'game_date' => $game->game_date,
+                'participants' => $playerCount,
+            ];
+        }
 
         return response()->json([
-            "games" => $games,
+            "games" => $finalGames,
         ], 200);
     }
 
@@ -67,10 +79,11 @@ class GamesController extends Controller
         foreach ($games as $game) {
             $playerCount = Player::where('game', $game->id)->count();
             $validGames[] = [
+                'id' => $game->id,
                 'game_title' => $game->game_title,
                 'game_description' => $game->game_description,
-                'game_date' => $game->date,
-                'participnts' => $playerCount,
+                'game_date' => $game->game_date,
+                'participants' => $playerCount,
             ];
         }
 
@@ -90,10 +103,11 @@ class GamesController extends Controller
         foreach ($games as $game) {
             $playerCount = Player::where('game', $game->id)->count();
             $pastGames[] = [
+                'id' => $game->id,
                 'game_title' => $game->game_title,
                 'game_description' => $game->game_description,
-                'game_date' => $game->date,
-                'participnts' => $playerCount,
+                'game_date' => $game->game_date,
+                'participants' => $playerCount,
             ];
         }
 
