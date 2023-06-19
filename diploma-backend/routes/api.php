@@ -30,15 +30,19 @@ Route::post('/inital_account_picture', [AccountController::class, "initialAccoun
 Route::get('/get_profile_pic/{id}', [AccountController::class, "getProfilePic"]);
 //Temp Routes
 
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/upload_picture', [AccountController::class, "uploadAccountPicture"]);
     Route::put('/update_name', [AccountController::class, "updateProfileName"]);
     Route::post('/upload_picture', [AccountController::class, 'uploadProfilePic']);
     Route::post('/add_replica', [ReplicaController::class, "addReplica"]);
-    Route::post('/create_game', [GamesController::class, "addGame"]);
     Route::post('/get_replicas', [ReplicaController::class, "getReplicas"]);
     Route::post('/edit_replica', [ReplicaController::class, "editReplica"]);
     Route::post('/delete_replica', [ReplicaController::class, 'deleteReplica']);
+    Route::post('/create_game', [GamesController::class, "addGame"]); 
+    Route::get('/get_games', [GamesController::class, "getGames"]);
+    Route::get('/get_valid_games', [GamesController::class, "getValidGames"]);
+    Route::get('/get_past_games', [GamesController::class, "getPastGames"]);
+    Route::post('/create_player', [GamesController::class, "createPlayer"]);
+    Route::post('/create_past_game', [GamesController::class, "createPastGame"]);
 });

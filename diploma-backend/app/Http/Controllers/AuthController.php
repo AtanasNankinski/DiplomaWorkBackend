@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Score;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -51,6 +52,13 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        $score = Score::create([
+            'user' => $user->id,
+            'victories' => 0,
+            'defeats' => 0,
+        ]);
+        $score->save();
 
         return response([
             'id' => $user->id,
