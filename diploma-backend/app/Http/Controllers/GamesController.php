@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Game;
+use App\Models\Replica;
 use App\Models\PastGame;
 use App\Models\player;
 
@@ -180,18 +181,29 @@ class GamesController extends Controller
         $validator = Validator::make($req->all(), [
             'game_id' => 'required|int',
         ]);
-
-        if($validator->fails())
-        {
+    
+        if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validator fails.'
+                'message' => 'Validation failed.',
             ], 422);
         }
-
-        $players = Player::where('game', $req->game_id)->all();
-
+    
+        $players = Player::where('game', $req->game_id)->get();
+    
+        $formattedPlayers = $players->map(function ($player) {
+            $user = User::find($player->user);
+            $replica = Replica::find($player->replica);
+    
+            return [
+                'id' => $player->id,
+                'user' => $user->name,
+                'replica' => $replica,
+                'team' => $player->team,
+            ];
+        });
+    
         return response()->json([
-            'players' => $players,
+            'players' => $formattedPlayers,
         ]);
     }
 }
