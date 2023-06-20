@@ -30,7 +30,6 @@ Route::post('/create_admin', [AuthController::class, 'createAdmin']);
 Route::post('/inital_account_picture', [AccountController::class, "initialAccountPicture"]);
 Route::get('/get_profile_pic/{id}', [AccountController::class, "getProfilePic"]);
 //Temp Routes
-Route::post('/get_score', [ScoreController::class, "getScore"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -49,4 +48,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/create_past_game', [GamesController::class, "createPastGame"]);
     Route::post('/get_players', [GamesController::class, "getPlayers"]);
     Route::post('/change_player_team', [GamesController::class, "updatePlayerTeam"]);
+    Route::post('/get_score', [ScoreController::class, "getScore"]);
 });
