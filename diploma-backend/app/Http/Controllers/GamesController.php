@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Game;
+use App\Models\Replica;
 use App\Models\PastGame;
-use App\Models\player;
+use App\Models\Score;
+use App\Models\Player;
 
 class GamesController extends Controller
 {
@@ -87,6 +89,24 @@ class GamesController extends Controller
         ]);
     
         $game->delete();
+
+        $players = Player::where('game', $req->game_id)->get();
+        foreach ($players as $player) {
+            $score = Score::where('user', $player->user)->first();
+            if ($score) {
+                if ($player->team == $req->team) {
+                    $score->victories += 1;
+                    $score->last_game = $pastGame->id;
+                } else {
+                    $score->defeats += 1;
+                    $score->last_game = $pastGame->id;
+                }
+                $score->save();
+            }
+
+            $player->game = $pastGame->id;
+            $player->save();
+        }
     
         return response()->json([
             'message' => 'Game moved to past games successfully.',
@@ -180,18 +200,72 @@ class GamesController extends Controller
         $validator = Validator::make($req->all(), [
             'game_id' => 'required|int',
         ]);
-
-        if($validator->fails())
-        {
+    
+        if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validator fails.'
+                'message' => 'Validation failed.',
+            ], 422);
+        }
+    
+        $players = Player::where('game', $req->game_id)->get();
+    
+        $formattedPlayers = $players->map(function ($player) {
+            $user = User::find($player->user);
+            $replica = Replica::find($player->replica);
+    
+            return [
+                'id' => $player->id,
+                'user' => $user->name,
+                'replica' => $replica,
+                'team' => $player->team,
+            ];
+        });
+    
+        return response()->json([
+            'players' => $formattedPlayers,
+        ], 200);
+    }
+
+    public function updatePlayerTeam(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'player_id' => 'required|int',
+            'team' => 'required|int',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validator fails.',
             ], 422);
         }
 
-        $players = Player::where('game', $req->game_id)->all();
+        $player = Player::find($req->player_id);
 
+        if (!$player) {
+            return response()->json([
+                'message' => 'Player not found.',
+            ], 404);
+        }
+
+        $player->team = $req->team;
+        $player->save();
+
+        $players = Player::where('game', $player->game)->get();
+    
+        $formattedPlayers = $players->map(function ($player) {
+            $user = User::find($player->user);
+            $replica = Replica::find($player->replica);
+    
+            return [
+                'id' => $player->id,
+                'user' => $user->name,
+                'replica' => $replica,
+                'team' => $player->team,
+            ];
+        });
+    
         return response()->json([
-            'players' => $players,
-        ]);
+            'players' => $formattedPlayers,
+        ], 200);
     }
 }
