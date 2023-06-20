@@ -7,6 +7,7 @@ use App\Http\Controllers\TestingController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ReplicaController;
 use App\Http\Controllers\GamesController;
+use App\Http\Controllers\ScoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,8 +30,7 @@ Route::post('/create_admin', [AuthController::class, 'createAdmin']);
 Route::post('/inital_account_picture', [AccountController::class, "initialAccountPicture"]);
 Route::get('/get_profile_pic/{id}', [AccountController::class, "getProfilePic"]);
 //Temp Routes
-Route::post('/get_players', [GamesController::class, "getPlayers"]);
-Route::post('/change_player_team', [GamesController::class, "updatePlayerTeam"]);
+Route::post('/get_score', [ScoreController::class, "getScore"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -47,4 +47,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get_past_games', [GamesController::class, "getPastGames"]);
     Route::post('/create_player', [GamesController::class, "createPlayer"]);
     Route::post('/create_past_game', [GamesController::class, "createPastGame"]);
+    Route::post('/get_players', [GamesController::class, "getPlayers"]);
+    Route::post('/change_player_team', [GamesController::class, "updatePlayerTeam"]);
 });
