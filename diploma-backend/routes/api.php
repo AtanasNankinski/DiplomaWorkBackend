@@ -30,6 +30,7 @@ Route::post('/inital_account_picture', [AccountController::class, "initialAccoun
 Route::get('/get_profile_pic/{id}', [AccountController::class, "getProfilePic"]);
 //Temp Routes
 Route::post('/get_players', [GamesController::class, "getPlayers"]);
+Route::post('/change_player_team', [GamesController::class, "updatePlayerTeam"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
