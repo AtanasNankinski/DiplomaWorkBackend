@@ -28,6 +28,13 @@ class AuthController extends Controller
             'user_type' => 1,
         ]);
 
+        $score = Score::create([
+            'user' => $user->id,
+            'victories' => 0,
+            'defeats' => 0,
+        ]);
+        $score->save();
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response(['user' => $user, 'access_token' => $token], 201);

@@ -32,6 +32,8 @@ class ScoreController extends Controller
 
         $lastGame = null;
         $player = null;
+        $finalGame = null;
+        $team = null;
         if($score->last_game != null)
         {
             $lastGame = PastGame::where('id', $score->last_game)->first();
@@ -45,6 +47,7 @@ class ScoreController extends Controller
                 'participants' => $playerCount,
             ];
             $player = Player::where('game', $lastGame->id)->first();
+            $team = $player->team;
         }
 
         return response()->json([
@@ -52,7 +55,7 @@ class ScoreController extends Controller
             'victories'=>$score->victories,
             'defeats'=>$score->defeats,
             'last_game'=>$finalGame,
-            'last_team'=>$player->team,
+            'last_team'=>$team,
         ], 200);
     }
 }
